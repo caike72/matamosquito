@@ -1,68 +1,105 @@
-
 var altura = 0
 var largura = 0
+var vidas = 1
+var tempo = 10
+
+var criaMosquitoTempo = 1500
+
+var nivel = window.location.search
+nivel = nivel.replace('?', '')
+
+if (nivel === 'normal') {
+	//1500
+	criaMosquitoTempo = 1500
+} else if (nivel === 'dificil') {
+	//1000
+	criaMosquitoTempo = 1000
+} else if (nivel === 'chucknorris') {
+	//750
+	criaMosquitoTempo = 750
+}
 
 function ajustaTamanhoTela() {
-    altura = window.innerHeight
-    largura = window.innerWidth
+	altura = window.innerHeight
+	largura = window.innerWidth
 
-    console.log(largura, altura)
+	console.log(largura, altura)
 }
 
 ajustaTamanhoTela()
 
+var cronometro = setInterval(function () {
+	tempo -= 1
+	if (tempo < 0) {
+		clearInterval(cronometro)
+		clearInterval(criaMosquito)
+		window.location.href = 'vitoria.html'
+	} else {
+		document.getElementById('cronometro').innerHTML = tempo
+	}
+}, 1000)
+
 function posicaoRandomica() {
-    //remover mosquito (caso exista)
-    if(document.getElementById('mosquito')) {
-    document.getElementById('mosquito').remove()
-}
-    var posicaoX = Math.floor(Math.random() * largura) - 90
-    var posicaoY = Math.floor(Math.random() * altura) - 90
+	//remover mosquito (caso exista)
+	if (document.getElementById('mosquito')) {
+		document.getElementById('mosquito').remove()
 
-    posicaoX = posicaoX < 0 ? 0 : posicaoX
-    posicaoY = posicaoY < 0 ? 0 : posicaoY
+		if (vidas > 3) {
+			window.location.href = 'fim_de_jogo.html'
+		} else {
+			document.getElementById('v' + vidas).src = "imagens/coracao_vazio.png"
 
-    console.log(posicaoX, posicaoY)
+			vidas++
+		}
+	}
+	var posicaoX = Math.floor(Math.random() * largura) - 90
+	var posicaoY = Math.floor(Math.random() * altura) - 90
 
-    // Elemento HTML
+	posicaoX = posicaoX < 0 ? 0 : posicaoX
+	posicaoY = posicaoY < 0 ? 0 : posicaoY
 
-    var mosquito = document.createElement('img')
-    mosquito.src = 'imagens/mosca.png'
-    mosquito.className = tamanhoAleatorio() + ' ' +ladoAleatorio()
-    mosquito.style.left = posicaoX + 'px'
-    mosquito.style.top = posicaoY + 'px'
-    mosquito.style.position = 'absolute'
-    mosquito.id = 'mosquito'
+	console.log(posicaoX, posicaoY)
 
-    document.body.appendChild(mosquito)
+	// Elemento HTML
+
+	var mosquito = document.createElement('img')
+	mosquito.src = 'imagens/mosca.png'
+	mosquito.className = tamanhoAleatorio() + ' ' + ladoAleatorio()
+	mosquito.style.left = posicaoX + 'px'
+	mosquito.style.top = posicaoY + 'px'
+	mosquito.style.position = 'absolute'
+	mosquito.id = 'mosquito'
+	mosquito.onclick = function () {
+		this.remove()
+	}
+
+	document.body.appendChild(mosquito)
 }
 
 function tamanhoAleatorio() {
-    var classe = Math.floor(Math.random() * 3)
+	var classe = Math.floor(Math.random() * 3)
 
-    switch(classe) {
-        case 0:
-            return 'mosquito-1'
+	switch (classe) {
+		case 0:
+			return 'mosquito-1'
 
-        case 1:
-            return 'mosquito-2'
+		case 1:
+			return 'mosquito-2'
 
-        case 2:
-            return 'mosquito-3'
-    }
+		case 2:
+			return 'mosquito-3'
+	}
 }
 
 function ladoAleatorio() {
-    var classe = Math.floor(Math.random() * 2)
+	var classe = Math.floor(Math.random() * 2)
 
-    switch(classe) {
-        case 0:
-            return 'ladoA'
+	switch (classe) {
+		case 0:
+			return 'ladoA'
 
-        case 1:
-            return 'ladoB'
-    }
+		case 1:
+			return 'ladoB'
+	}
 
 }
-
-
